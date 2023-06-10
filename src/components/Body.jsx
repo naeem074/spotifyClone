@@ -1,13 +1,23 @@
 import axios from "axios";
 import React, { useEffect } from "react";
-import styled from "styled-components";
 import { useStateProvider } from "../utils/StateProvider";
 import { AiFillClockCircle } from "react-icons/ai";
 import { reducerCases } from "../utils/Constants";
-export default function Body({ headerBackground }) {
+import "../styles/home.css";
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import DownloadSongs from "./DownloadSongs";
+
+export default function Body() {
+  // redux hook
   const [{ token, selectedPlaylist, selectedPlaylistId }, dispatch] =
     useStateProvider();
 
+  // user selected playlist function
   useEffect(() => {
     const getInitialPlaylist = async () => {
       const response = await axios.get(
@@ -19,28 +29,33 @@ export default function Body({ headerBackground }) {
           },
         }
       );
+      console.log(response, "favvv songs data");
       const selectedPlaylist = {
-        id: response.data.id,
-        name: response.data.name,
-        description: response.data.description.startsWith("<a")
+        id: response?.data?.id,
+        name: response?.data?.name,
+        description: response?.data?.description?.startsWith("<a")
           ? ""
-          : response.data.description,
-        image: response.data.images[0].url,
-        tracks: response.data.tracks.items.map(({ track }) => ({
-          id: track.id,
-          name: track.name,
-          artists: track.artists.map((artist) => artist.name),
-          image: track.album.images[2].url,
-          duration: track.duration_ms,
-          album: track.album.name,
-          context_uri: track.album.uri,
-          track_number: track.track_number,
+          : response?.data?.description,
+        image: response?.data?.images[0]?.url,
+        tracks: response?.data?.tracks?.items?.slice(0, 20).map(({ track }) => ({
+          id: track?.id,
+          name: track?.name,
+          artists: track?.artists?.map((artist) => artist?.name),
+          image: track?.album?.images[2]?.url,
+          duration: track?.duration_ms,
+          album: track?.album?.name,
+          context_uri: track?.album?.uri,
+          track_number: track?.track_number,
         })),
       };
-      dispatch({ type: reducerCases.SET_PLAYLIST, selectedPlaylist });
+
+      const ProfessionalTemp = response?.data?.tracks?.items?.slice(0, 20);
+      dispatch({ type: reducerCases?.SET_PLAYLIST, selectedPlaylist });
     };
     getInitialPlaylist();
   }, [token, dispatch, selectedPlaylistId]);
+
+  // play song function
   const playTrack = async (
     id,
     name,
@@ -65,181 +80,125 @@ export default function Body({ headerBackground }) {
         },
       }
     );
-    if (response.status === 204) {
+    if (response?.status === 204) {
       const currentPlaying = {
         id,
         name,
         artists,
         image,
       };
-      dispatch({ type: reducerCases.SET_PLAYING, currentPlaying });
-      dispatch({ type: reducerCases.SET_PLAYER_STATE, playerState: true });
+      dispatch({ type: reducerCases?.SET_PLAYING, currentPlaying });
+      dispatch({ type: reducerCases?.SET_PLAYER_STATE, playerState: true });
     } else {
-      dispatch({ type: reducerCases.SET_PLAYER_STATE, playerState: true });
+      dispatch({ type: reducerCases?.SET_PLAYER_STATE, playerState: true });
     }
   };
+
+  // convert time milisecound into min or sec function
   const msToMinutesAndSeconds = (ms) => {
     var minutes = Math.floor(ms / 60000);
     var seconds = ((ms % 60000) / 1000).toFixed(0);
     return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
   };
   return (
-    <Container headerBackground={headerBackground}>
-      {selectedPlaylist && (
-        <>
-          <div className="playlist">
-            <div className="image">
-              <img src={selectedPlaylist.image} alt="selected playlist" />
-            </div>
-            <div className="details">
-              <span className="type">PLAYLIST</span>
-              <h1 className="title">{selectedPlaylist.name}</h1>
-              <p className="description">{selectedPlaylist.description}</p>
-            </div>
-          </div>
-          <div className="list">
-            <div className="header-row">
-              <div className="col">
-                <span>#</span>
-              </div>
-              <div className="col">
-                <span>TITLE</span>
-              </div>
-              <div className="col">
-                <span>ALBUM</span>
-              </div>
-              <div className="col">
-                <span>
-                  <AiFillClockCircle />
-                </span>
-              </div>
-            </div>
-            <div className="tracks">
-              {selectedPlaylist.tracks.map(
-                (
-                  {
-                    id,
-                    name,
-                    artists,
-                    image,
-                    duration,
-                    album,
-                    context_uri,
-                    track_number,
-                  },
-                  index
-                ) => {
-                  return (
-                    <div
-                      className="row"
-                      key={id}
-                      onClick={() =>
-                        playTrack(
-                          id,
-                          name,
-                          artists,
-                          image,
-                          context_uri,
-                          track_number
-                        )
-                      }
-                    >
-                      <div className="col">
-                        <span>{index + 1}</span>
-                      </div>
-                      <div className="col detail">
-                        <div className="image">
-                          <img src={image} alt="track" />
-                        </div>
-                        <div className="info">
-                          <span className="name">{name}</span>
-                          <span>{artists}</span>
-                        </div>
-                      </div>
-                      <div className="col">
-                        <span>{album}</span>
-                      </div>
-                      <div className="col">
-                        <span>{msToMinutesAndSeconds(duration)}</span>
-                      </div>
+    <>
+      <div className="mainContainer">
+        {
+          selectedPlaylist && (
+            <>
+              <div className="container">
+                <div className="row mx-3 mb-4">
+                  <div className="col-xxl-5 col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                    <div className="image">
+                      <img src={selectedPlaylist?.image} alt="selected playlist" />
                     </div>
-                  );
-                }
-              )}
-            </div>
-          </div>
-        </>
-      )}
-    </Container>
+                  </div>
+                  <div className="col-xxl-7 col-xl-12 col-lg-12 col-md-12 col-sm-12 mt-lg-3 mt-md-3 mt-sm-5">
+                    <div className="details">
+                      <span className="type" style={{ fontFamily: "'Poppins', sans-serif" }}>PLAYLIST</span>
+                      <h1 className="title">{selectedPlaylist?.name}</h1>
+                      <p className="description">{selectedPlaylist?.description}</p>
+                    </div>
+                  </div>
+                </div>
+                <TableContainer>
+                  <Table sx={{ minWidth: 650, marginBottom: 20 }} aria-label="simple table">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell style={{ color: '#dddcdc' }}>#</TableCell>
+                        <TableCell style={{ color: '#dddcdc' }}>TITLE</TableCell>
+                        <TableCell style={{ color: '#dddcdc' }}>ALBUM</TableCell>
+                        <TableCell style={{ color: '#dddcdc' }}><AiFillClockCircle /></TableCell>
+                        <TableCell style={{ color: '#dddcdc' }}>Download</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {selectedPlaylist.tracks.map(
+                        (
+                          {
+                            id,
+                            name,
+                            artists,
+                            image,
+                            duration,
+                            album,
+                            context_uri,
+                            track_number,
+                          },
+                          index
+                        ) => {
+                          return (
+                            <TableRow
+                              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                              key={id}
+                              onClick={() =>
+                                playTrack(
+                                  id,
+                                  name,
+                                  artists,
+                                  image,
+                                  context_uri,
+                                  track_number
+                                )
+                              }
+                            >
+                              <TableCell style={{ color: "#b3b3b3" }}>{index + 1}</TableCell>
+                              <TableCell>
+                                <div className="d-flex">
+                                  <div className="trackImage">
+                                    <img src={image} alt="track" />
+                                  </div>
+                                  <div className="flex flex-column ms-3">
+                                    <div className="nameSongs">
+                                      <span>{name}</span>
+                                    </div>
+                                    <div className="artistsName">
+                                      <span>{artists}</span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </TableCell>
+                              <TableCell className="artistsName">
+                                {album}
+                              </TableCell>
+                              <TableCell className="artistsName">
+                                <span>{msToMinutesAndSeconds(duration)}</span>
+                              </TableCell>
+                              <TableCell>
+                                <DownloadSongs downloadID={id} />
+                              </TableCell>
+                            </TableRow>
+                          );
+                        }
+                      )}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </div>
+            </>
+          )
+        }
+      </div>
+    </>
   );
 }
-
-const Container = styled.div`
-  .playlist {
-    margin: 0 2rem;
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-    .image {
-      img {
-        height: 15rem;
-        box-shadow: rgba(0, 0, 0, 0.25) 0px 25px 50px -12px;
-      }
-    }
-    .details {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      color: #e0dede;
-      .title {
-        color: white;
-        font-size: 4rem;
-      }
-    }
-  }
-  .list {
-    .header-row {
-      display: grid;
-      grid-template-columns: 0.3fr 3fr 2fr 0.1fr;
-      margin: 1rem 0 0 0;
-      color: #dddcdc;
-      position: sticky;
-      top: 15vh;
-      padding: 1rem 3rem;
-      transition: 0.3s ease-in-out;
-      background-color: ${({ headerBackground }) =>
-        headerBackground ? "#000000dc" : "none"};
-    }
-    .tracks {
-      margin: 0 2rem;
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 5rem;
-      .row {
-        padding: 0.5rem 1rem;
-        display: grid;
-        grid-template-columns: 0.3fr 3.1fr 2fr 0.1fr;
-        &:hover {
-          background-color: rgba(0, 0, 0, 0.7);
-        }
-        .col {
-          display: flex;
-          align-items: center;
-          color: #dddcdc;
-          img {
-            height: 40px;
-            width: 40px;
-          }
-        }
-        .detail {
-          display: flex;
-          gap: 1rem;
-          .info {
-            display: flex;
-            flex-direction: column;
-          }
-        }
-      }
-    }
-  }
-`;

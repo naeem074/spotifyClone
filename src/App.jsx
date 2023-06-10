@@ -3,9 +3,14 @@ import Login from "./components/Login";
 
 import { reducerCases } from "./utils/Constants";
 import { useStateProvider } from "./utils/StateProvider";
-import Beataudio from "./components/Beataudio";
+import Layout from "./components/Layout";
+
+
 export default function App() {
+  // redux hook
   const [{ token }, dispatch] = useStateProvider();
+
+  // user token hook
   useEffect(() => {
     const hash = window.location.hash;
     if (hash) {
@@ -16,5 +21,5 @@ export default function App() {
     }
     document.title = "Beat Audio";
   }, [dispatch, token]);
-  return <div>{token ? <Beataudio /> : <Login />}</div>;
+  return <div>{token ? <Layout /> : <Login />}</div>;
 }

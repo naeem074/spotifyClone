@@ -3,6 +3,8 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App.jsx";
 import { StateProvider } from "./utils/StateProvider";
+import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+import "../node_modules/bootstrap//dist/js/bootstrap.min.js";
 import reducer, { initialState } from "./utils/Reducer";
 ReactDOM.render(
   <React.StrictMode>

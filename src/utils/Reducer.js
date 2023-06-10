@@ -1,5 +1,6 @@
 import { reducerCases } from "./Constants";
 
+// initial state
 export const initialState = {
   token: null,
   userInfo: null,
@@ -7,9 +8,15 @@ export const initialState = {
   currentPlaying: null,
   playerState: false,
   selectedPlaylist: null,
-  selectedPlaylistId: "37i9dQZF1E37jO8SiMT0yN",
+  selectedPlaylistId: "0qMhd4mIaKCk9PEkqPHpBE",
+  deviceId: '24530AC6-3FC7-41BF-BA79-2EDA15A0C532',
+  headerBackground: false,
+  navBackground: false,
+  searchSongs: null,
+  downloadSong: null,
 };
 
+// reducers cases
 const reducer = (state, action) => {
   switch (action.type) {
     case reducerCases.SET_TOKEN:
@@ -46,6 +53,26 @@ const reducer = (state, action) => {
       return {
         ...state,
         selectedPlaylistId: action.selectedPlaylistId,
+      };
+    case reducerCases.SET_HEADER_BACKGROUND:
+      return {
+        ...state,
+        headerBackground: action.headerBackground,
+      };
+    case reducerCases.SET_NAV_BACKGROUND:
+      return {
+        ...state,
+        navBackground: action.navBackground,
+      };
+    case reducerCases.SEARCH_SONGS:
+      return {
+        ...state,
+        searchSongs: action.searchSongs,
+      };
+    case reducerCases.DOWNLOAD_SONG:
+      return {
+        ...state,
+        downloadSong: action.downloadSong,
       };
     default:
       return state;

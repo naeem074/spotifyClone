@@ -1,0 +1,19 @@
+*{
+    margin: 0%;
+    padding: 0%;
+    box-sizing: border-box;
+}
+
+.footerDiv {
+    height: 150px;
+    width: 100%;
+    border-top: 1px solid #282828 !important;
+    background: #0f2027; /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #2c5364, #203a43, #0f2027); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #2c5364, #203a43, #0f2027);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 10px;
+}

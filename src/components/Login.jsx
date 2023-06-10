@@ -1,10 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import logo from "../BeatAudio.png";
+import logo from "../assests/logo.png";
 
 export default function Login() {
-  const handleClick = async () => {
-    const client_id = "a2e0fc4bdaee4bdbbc7091a2d13f7107";
+  // login to spotify function
+  const handleClick = async () => { 
+    const client_id = "739a17f667dc40ba902cb552a51da4f6";
     const redirect_uri = "http://localhost:3000/";
     const api_uri = "https://accounts.spotify.com/authorize";
     const scope = [
@@ -23,6 +24,7 @@ export default function Login() {
   return (
     <Container>
       <img src={logo} alt="Beat Audio" />
+      <h1>Beat Audio.</h1>
       <button onClick={handleClick}>Login</button>
     </Container>
   );
@@ -35,17 +37,23 @@ const Container = styled.div`
   flex-direction: column;
   height: 100vh;
   width: 100vw;
-  background-color: #205e61;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 1));
+  background-color: rgb(32, 87, 100);
   gap: 5rem;
   img {
     height: 20vh;
     padding-bottom: -10px;
   }
+  h1 {
+    font-size: 22px;
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+  }
   button {
     padding: 1rem 5rem;
     border-radius: 5rem;
-    background-color: black;
-    color: #ffffff;
+    background-color: #cad2c5;
+    color: #000000;
     border: none;
     font-size: 1.4rem;
     cursor: pointer;

@@ -4,7 +4,10 @@ import styled from "styled-components";
 import { useStateProvider } from "../utils/StateProvider";
 
 export default function Volume() {
+  // redux hook
   const [{ token }] = useStateProvider();
+
+  // get current volume function
   const setVolume = async (e) => {
     await axios.put(
       "https://api.spotify.com/v1/me/player/volume",
@@ -22,7 +25,7 @@ export default function Volume() {
   };
   return (
     <Container>
-      <input type="range" onMouseUp={(e) => setVolume(e)} min={0} max={100} />
+      <input type="range" onMouseUp={(e) => setVolume(e)} min={0} max={100} style={{margin: '10px 0px 0px 0px'}} />
     </Container>
   );
 }
@@ -32,7 +35,7 @@ const Container = styled.div`
   justify-content: flex-end;
   align-content: center;
   input {
-    width: 15rem;
+    // width: 5rem;
     border-radius: 2rem;
     height: 0.5rem;
   }
